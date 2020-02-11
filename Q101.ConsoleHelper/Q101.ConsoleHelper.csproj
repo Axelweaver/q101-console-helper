@@ -37,8 +37,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Abstract\IConsoleHelper.cs" />
-    <Compile Include="Concrete\ConsoleHelper.cs" />
+    <Compile Include="Abstract\IQ101ConsoleHelper.cs" />
+    <Compile Include="Concrete\Q101ConsoleHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

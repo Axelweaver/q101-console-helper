@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Resources;
 using Q101.ConsoleHelper.Abstract;
 
 namespace Q101.ConsoleHelper.Concrete
@@ -7,7 +6,7 @@ namespace Q101.ConsoleHelper.Concrete
     /// <summary>
     /// Work with the console
     /// </summary>
-    public class ConsoleHelper : IConsoleHelper
+    public class Q101ConsoleHelper : IQ101ConsoleHelper
     {
         private string _messageFormat = "[{timestamp}]:|{message}\n";
 
@@ -27,6 +26,21 @@ namespace Q101.ConsoleHelper.Concrete
             }
 
             _timestampFormat = timeFormat ?? _timestampFormat;
+
+            if (!messageFormat.Contains("|"))
+            {
+                throw new ArgumentException(
+                    "Missing delimiter | in messageFormat argument");
+            }
+
+            if (!messageFormat.Contains("{message}")
+                || !messageFormat.Contains("{timestamp}"))
+            {
+                throw new ArgumentException(
+                    "Missing message or timestamp in messageFormat argument");
+            }
+
+            _messageFormat = messageFormat;
         }
 
         /// <summary>
@@ -161,18 +175,7 @@ namespace Q101.ConsoleHelper.Concrete
         /// <param name="color">Text color (default white)</param>
         public void WriteMessageWithTimeStamp(string message, ConsoleColor? color = ConsoleColor.White)
         {
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.Write($"[{DateTime.Now:dd.MM.yyyy HH:mm:ss:ffffff}]");
-            Console.ForegroundColor = color ?? ConsoleColor.White;
-            Console.Write($" {message}\n");
-            Console.ForegroundColor = ConsoleColor.White;
-        }
-
-        private string FormatMessage(string message)
-        {
             var messageFormatArr = _messageFormat.Split('|');
-
-            var resultMessageArr = new string[2];
 
             for (int i = 0; i < 2; i++)
             {
@@ -180,34 +183,25 @@ namespace Q101.ConsoleHelper.Concrete
 
                 if (partOfMessage.Contains("{timestamp}"))
                 {
-                    resultMessageArr[i] = partOfMessage.Replace(
+                    var timeStampMessage = partOfMessage.Replace(
                         "{timestamp}",
                         DateTime.Now.ToString(_timestampFormat));
+
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    Console.Write($"{timeStampMessage}");
                 }
 
                 if (partOfMessage.Contains("{message}"))
                 {
-                    resultMessageArr[i] = partOfMessage.Replace(
+                    var textMessage = partOfMessage.Replace(
                         "{message}",
                         message);
+
+                    Console.ForegroundColor = color ?? ConsoleColor.White;
+                    Console.Write($" {textMessage}\n");
+                    Console.ForegroundColor = ConsoleColor.White;
                 }
-
-
             }
-
-            var messageFormat =
-                _messageFormat.Replace("{timestamp}", "{0}")
-                              .Replace("{message}", "{1}");
-
-            var timestamp = DateTime.Now;
-
-            var resultMessage = string.Format(
-                messageFormat,
-                timestamp.ToString(_timestampFormat),
-                message);
-
-            return resultMessage;
         }
-
     }
 }

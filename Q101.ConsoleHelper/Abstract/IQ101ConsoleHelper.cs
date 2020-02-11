@@ -5,7 +5,7 @@ namespace Q101.ConsoleHelper.Abstract
     /// <summary>
     /// Work with the console
     /// </summary>
-    public interface IConsoleHelper
+    public interface IQ101ConsoleHelper
     {
         /// <summary>
         /// Set message and datetime formats
