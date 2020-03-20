@@ -39,6 +39,10 @@
   <ItemGroup>
     <Compile Include="Abstract\IQ101ConsoleHelper.cs" />
     <Compile Include="Concrete\Q101ConsoleHelper.cs" />
+    <Compile Include="Enums\MessageTypes.cs" />
+    <Compile Include="Messages\MessagesHelper.cs" />
+    <Compile Include="Messages\MessagesList.cs" />
+    <Compile Include="Models\ApplicationMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

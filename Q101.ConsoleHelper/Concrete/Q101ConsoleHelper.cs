@@ -1,5 +1,7 @@
 ﻿using System;
 using Q101.ConsoleHelper.Abstract;
+using Q101.ConsoleHelper.Enums;
+using Q101.ConsoleHelper.Messages;
 
 namespace Q101.ConsoleHelper.Concrete
 {
@@ -12,6 +14,18 @@ namespace Q101.ConsoleHelper.Concrete
 
         private string _timestampFormat = "dd.MM.yyyy HH:mm:ss:ffffff";
 
+        /// <summary>
+        /// Messages Helper
+        /// </summary>
+        public MessagesHelper MessagesHelper { get; }
+
+        /// <summary>
+        /// ctor
+        /// </summary>
+        public Q101ConsoleHelper()
+        {
+            MessagesHelper = new MessagesHelper();
+        }
 
         /// <summary>
         /// Set message and datetime formats
@@ -95,7 +109,9 @@ namespace Q101.ConsoleHelper.Concrete
 
                 if (!isCorrectInput)
                 {
-                    WriteMessageWithTimeStamp("Некорретный ввод. Повторите", ConsoleColor.Red);
+                    MessagesHelper.WriteMessageByType(
+                        MessageTypes.IncorrectInputTryThis,
+                        WriteMessageWithTimeStamp);
                 }
             }
 
@@ -116,11 +132,14 @@ namespace Q101.ConsoleHelper.Concrete
             while (string.IsNullOrEmpty(value))
             {
                 WriteMessageWithTimeStamp(message, ConsoleColor.Yellow);
+
                 value = Console.ReadLine();
 
                 if (string.IsNullOrEmpty(value) && !maybeNull)
                 {
-                    WriteMessageWithTimeStamp("Некорректный ввод, введите ещё раз", ConsoleColor.Red);
+                    MessagesHelper.WriteMessageByType(
+                        MessageTypes.IncorrectInputTryThis,
+                        WriteMessageWithTimeStamp);
                 }
                 else if (string.IsNullOrEmpty(value) && maybeNull)
                 {
@@ -157,7 +176,9 @@ namespace Q101.ConsoleHelper.Concrete
 
                 if (!isParsed && defaultValue == 0)
                 {
-                    WriteMessageWithTimeStamp("Некорректный ввод, введите ещё раз", ConsoleColor.Red);
+                    MessagesHelper.WriteMessageByType(
+                        MessageTypes.IncorrectInputTryThis,
+                        WriteMessageWithTimeStamp);
                 }
                 else if (!isParsed && defaultValue != 0)
                 {
@@ -202,6 +223,54 @@ namespace Q101.ConsoleHelper.Concrete
                     Console.ForegroundColor = ConsoleColor.White;
                 }
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="color"></param>
+        public void Message(string message, ConsoleColor? color = ConsoleColor.White)
+        {
+            WriteMessageWithTimeStamp(message, color);
+        }
+
+        /// <summary>
+        /// Write Application End Phrase
+        /// </summary>
+        /// <param name="waitUserInput"></param>
+        /// <param name="hasErrors"></param>
+        public void WriteApplicationEndPhrase(bool hasErrors, bool waitUserInput = false)
+        {
+            if (hasErrors)
+            {
+                MessagesHelper.WriteMessageByType(
+                    MessageTypes.ApplicationEndWithErrors,
+                    WriteMessageWithTimeStamp);
+            }
+            else
+            {
+                MessagesHelper.WriteMessageByType(
+                    MessageTypes.ApplicationEndWithoutErrors,
+                    WriteMessageWithTimeStamp);
+            }
+
+            if (!waitUserInput)
+            {
+                Console.ReadLine();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="exception"></param>
+        /// <param name="color"></param>
+        public void WriteException(Exception exception, ConsoleColor color = ConsoleColor.Red)
+        {
+            WriteMessageWithTimeStamp(
+                $"Произошла ошибка: {exception.Message}\n{exception.StackTrace}",
+                color);
         }
     }
 }

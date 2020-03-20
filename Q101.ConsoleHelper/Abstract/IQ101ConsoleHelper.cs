@@ -56,5 +56,12 @@ namespace Q101.ConsoleHelper.Abstract
         /// <param name="message">Message for user</param>
         /// <param name="color">Text color (default white)</param>
         void WriteMessageWithTimeStamp(string message, ConsoleColor? color = ConsoleColor.White);
+
+        /// <summary>
+        /// Write Application End Phrase
+        /// </summary>
+        /// <param name="waitUserInput"></param>
+        /// <param name="hasErrors"></param>
+        void WriteApplicationEndPhrase(bool hasErrors, bool waitUserInput = false);
     }
 }
